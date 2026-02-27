@@ -1,0 +1,99 @@
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Requests\Student\StudentRegisterRequest;
+use App\Http\Requests\Student\StudentUpdateRequest;
+use App\Repositories\Student\StudentRepositoryInterface;
+use App\Repositories\User\UserRepositoryInterface;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Exception;
+use Illuminate\Support\Facades\Hash;
+
+class StudentController extends BaseController
+{
+    /**
+     * Display a listing of the resource.
+     */
+    protected $studentRepo;
+
+    protected $userRepo;
+
+    public function __construct(StudentRepositoryInterface $studentRepo, UserRepositoryInterface $userRepo)
+    {
+        $this->studentRepo = $studentRepo;
+        $this->userRepo = $userRepo;
+    }
+
+    public function index()
+    {
+        $students = $this->studentRepo->index();
+
+        return $this->success($students, 'Students Retrived Successfully', 200);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StudentRegisterRequest $request)
+    {
+        $data = $request->validated();
+
+        $userData = [
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+        ];
+        $user = $this->userRepo->register($userData);
+        $path = null;
+        if ($request->hasFile('image')) {
+            $image = Cloudinary::upload($request->file('image')->getRealPath(), ['upload_preset' => env('STUDENT_PRESET')]);
+
+            $path = $image->getSecurePath();
+        }
+        $student = $this->studentRepo->store($user, $data, $path);
+
+        return $this->success($student, 'Students Created successfully', 200);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        try {
+            $student = $this->studentRepo->show($id);
+
+            return $this->success($student, 'Student retrived Successfully', 200);
+        } catch (Exception $e) {
+            return $this->error($e, 'error getting users', 422);
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(StudentUpdateRequest $request, $id)
+    {
+        $data = $request->validated();
+
+        $updateStudent = $this->studentRepo->update($data, $id);
+
+        return $this->success($updateStudent, 'Student Update Successfully', 200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+
+    public function totalStudents()
+    {
+        $count = $this->studentRepo->totalStudents();
+
+        return $this->success($count,'Total Students Count retrived',200);
+    }
+}
