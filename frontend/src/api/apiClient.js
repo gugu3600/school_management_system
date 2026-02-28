@@ -5,6 +5,7 @@ const api = import.meta.env.VITE_API;
 const apiClient = axios.create({
      baseURL: api,
      timeout: 10000, // Refresh ဖြစ်တဲ့အခါ ခဏစောင့်ပေးဖို့ 10s ထားကြည့်ပါ
+     withCredentials : true,
      headers: {
           "Accept": "application/json",
           "Content-Type": "application/json"
