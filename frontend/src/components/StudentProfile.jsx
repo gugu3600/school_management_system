@@ -37,7 +37,7 @@ export default function StudentProfile({ user }) {
                               }}>
                                    <Box sx={{ position: 'relative' }}>
                                         <Avatar
-                                             src={user?.photo?.path}
+                                             src={user?.photo}
                                              sx={{
                                                   width: { xs: 120, md: 160 },
                                                   height: { xs: 120, md: 160 },
