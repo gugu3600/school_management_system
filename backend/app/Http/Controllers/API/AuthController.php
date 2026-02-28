@@ -22,6 +22,10 @@ class AuthController extends BaseController
 
     public function login(Request $request)
     {
+        $userExists = \App\Models\User::where('email', $request->email)->first();
+    if (!$userExists) {
+        return $this->error('User not found in database', null, 404);
+    }
         try {
             $credentials = $request->only(['email', 'password']);
             if (! $token = JWTAuth::attempt($credentials)) {
