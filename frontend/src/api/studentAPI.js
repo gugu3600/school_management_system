@@ -15,7 +15,11 @@ export const getAllStudentCounts = async () => {
 export const createStudent = async data => {
 
      const response = await apiClient.post("/students/register", data,
-     );
+     {
+          headers : {
+               "Content-Type" : "multipart/form-data"
+          }
+     });
 
      if (!response.data.success) {
           return false;

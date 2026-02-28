@@ -58,15 +58,15 @@ export default function StudentProfile({ user }) {
                                    </Box>
 
                                    <Typography variant="h4" sx={{ mt: 3, fontWeight: 900, color: '#fff', letterSpacing: '-1px' }}>
-                                        {user.name}
+                                        {user?.name || ""}
                                    </Typography>
                                    <Typography sx={{ color: '#94a3b8', fontWeight: 600, mb: 3 }}>
-                                        ID: STUDENT-{user.student_id || "7821"}
+                                        ID: STUDENT-{user?.student_id || ""}
                                    </Typography>
 
                                    <Stack direction="row" spacing={1} justifyContent="center" sx={{ mb: 4 }}>
                                         <Chip label="Level 4" sx={{ background: 'linear-gradient(90deg, #6366f1, #4f46e5)', color: '#fff', fontWeight: 700 }} />
-                                        <Chip label={user.gender} variant="outlined" sx={{ color: '#fff', borderColor: 'rgba(255,255,255,0.2)' }} />
+                                        <Chip label={user?.gender || ""} variant="outlined" sx={{ color: '#fff', borderColor: 'rgba(255,255,255,0.2)' }} />
                                    </Stack>
 
                                    <Divider sx={{ my: 3, borderColor: 'rgba(255,255,255,0.05)' }} />
@@ -89,10 +89,10 @@ export default function StudentProfile({ user }) {
                                         <Typography variant="h6" sx={{ color: '#fff', fontWeight: 800, mb: 4 }}>Personal Information</Typography>
                                         <Grid container spacing={2}>
                                              {[
-                                                  { label: 'Date of Birth', val: user.dob, icon: <CalendarTodayIcon /> },
-                                                  { label: 'Institutional Email', val: user.email, icon: <EmailIcon /> },
-                                                  { label: 'Father Name', val: user.father_name, icon: <PersonIcon /> },
-                                                  { label: 'Mother Name', val: user.mother_name, icon: <PersonIcon /> },
+                                                  { label: 'Date of Birth', val: user?.dob || "", icon: <CalendarTodayIcon /> },
+                                                  { label: 'Institutional Email', val: user?.email || "", icon: <EmailIcon /> },
+                                                  { label: 'Father Name', val: user?.father_name || "", icon: <PersonIcon /> },
+                                                  { label: 'Mother Name', val: user?.mother_name || "", icon: <PersonIcon /> },
                                              ].map((item, i) => (
                                                   <Grid item xs={12} sm={6} key={i}>
                                                        <Box sx={{ p: 3, borderRadius: '24px', bgcolor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.03)' }}>
@@ -120,11 +120,11 @@ export default function StudentProfile({ user }) {
                                                   <Stack spacing={2}>
                                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                                                             <LocationOnIcon sx={{ color: '#6366f1' }} />
-                                                            <Typography sx={{ color: '#cbd5e1', lineHeight: 1.6 }}>{user.address}</Typography>
+                                                            <Typography sx={{ color: '#cbd5e1', lineHeight: 1.6 }}>{user?.address || ""}</Typography>
                                                        </Box>
                                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                                                             <PhoneIcon sx={{ color: '#6366f1' }} />
-                                                            <Typography sx={{ color: '#fff', fontWeight: 800 }}>{user.phone}</Typography>
+                                                            <Typography sx={{ color: '#fff', fontWeight: 800 }}>{user?.phone || ""}</Typography>
                                                        </Box>
                                                   </Stack>
                                              </Grid>

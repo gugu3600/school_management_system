@@ -24,7 +24,7 @@ export default function Profile() {
      if(isPerror){
           return(
                <Alert severity="warning">
-                    {pError}
+                    {pError.message ? pError.message : ""}
                </Alert>
           )
      }

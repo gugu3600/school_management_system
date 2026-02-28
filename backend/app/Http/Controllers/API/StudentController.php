@@ -6,9 +6,11 @@ use App\Http\Requests\Student\StudentRegisterRequest;
 use App\Http\Requests\Student\StudentUpdateRequest;
 use App\Repositories\Student\StudentRepositoryInterface;
 use App\Repositories\User\UserRepositoryInterface;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+// use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Exception;
 use Illuminate\Support\Facades\Hash;
+use Cloudinary\Cloudinary;
+
 
 class StudentController extends BaseController
 {
@@ -45,15 +47,39 @@ class StudentController extends BaseController
             'password' => Hash::make($data['password']),
         ];
         $user = $this->userRepo->register($userData);
-        $path = null;
-        if ($request->hasFile('image')) {
-            $image = Cloudinary::upload($request->file('image')->getRealPath(), ['upload_preset' => env('STUDENT_PRESET')]);
+        try {
+            $path = null;
 
-            $path = $image->getSecurePath();
-        }
+            if ($request->hasFile('image')) {
+                $cloudinary = new Cloudinary([
+                    'cloud' => [
+                        'cloud_name' => config('cloudinary.cloud_name'),
+                        'api_key' => config('cloudinary.api_key'),
+                        'api_secret' => config('cloudinary.api_secret'),
+                    ],
+                ]);
+
+                $upload = $cloudinary->uploadApi()->upload(
+                    $request->file('image')->getRealPath(),
+                    ['upload_preset' => 'students']
+                );
+
+                $path = $upload['secure_url'];
+            }
+        
         $student = $this->studentRepo->store($user, $data, $path);
 
         return $this->success($student, 'Students Created successfully', 200);
+        }
+
+        catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error_message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ], 500);
+        }
+
     }
 
     /**

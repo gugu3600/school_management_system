@@ -1,16 +1,21 @@
 import { useCreateStudent } from "../../hooks/createStudent";
-import { Box, Typography, Alert, TextField, Button, CircularProgress, MenuItem, Divider, FormControl, InputLabel, Select } from "@mui/material";
-// import { useApp } from "../../ThemeApp";
-// import { useNavigate } from "react-router-dom";
+import {
+     Box, Typography, Alert, TextField, Button, CircularProgress,
+     MenuItem, Divider, FormControl, InputLabel, Select, Avatar, IconButton, Paper
+} from "@mui/material";
+import { PhotoCamera } from "@mui/icons-material"; // Append
 import { useRef, useState } from "react";
 import { useApp } from "../../ThemeApp";
 
 export default function AddNewStudent() {
-
-     // const navigate = useNavigate();
      const { handleCreate, isLoading } = useCreateStudent();
      const [error, setError] = useState(null);
-     const {  setGlobalMsg } = useApp();
+     const { setGlobalMsg } = useApp();
+
+     // --- Append: Image Upload States ---
+     const [preview, setPreview] = useState(null);
+     const [imageFile, setImageFile] = useState(null);
+
      const nameInput = useRef();
      const emailInput = useRef();
      const passwordInput = useRef();
@@ -23,10 +28,16 @@ export default function AddNewStudent() {
      const phoneInput = useRef();
      const previousSchoolInput = useRef();
 
+     const handleImageChange = e => {
+          const file = e.target.files[0];
+          if (file) {
+               setImageFile(file);
+               setPreview(URL.createObjectURL(file));
+          }
+     };
+
      const getLimitDate = yearsAgo => {
-
           const d = new Date();
-
           d.setFullYear(d.getFullYear() - yearsAgo);
           return d.toISOString().split('T')[0];
      }
@@ -35,7 +46,6 @@ export default function AddNewStudent() {
      const maxDateStr = getLimitDate(5);
 
      const handleSubmit = (e) => {
-
           e.preventDefault();
 
           const birthDate = new Date(dobInput.current.value);
@@ -55,59 +65,66 @@ export default function AddNewStudent() {
           }
 
           setError(null);
-          const data = {
-               name: nameInput.current.value,
-               email: emailInput.current.value,
-               password: passwordInput.current.value,
-               student_id: Number(studentIdInput.current.value),
-               dob: dobInput.current.value,
-               gender: genderInput.current.value,
-               father_name: fatherNameInput.current.value,
-               mother_name: motherNameInput.current.value,
-               address: addressInput.current.value,
-               phone: phoneInput.current.value,
-               previous_school: previousSchoolInput.current.value
+
+          const formData = new FormData();
+          formData.append("name", nameInput.current.value);
+          formData.append("email", emailInput.current.value);
+          formData.append("password", passwordInput.current.value);
+          formData.append("student_id", Number(studentIdInput.current.value));
+          formData.append("dob", dobInput.current.value);
+          formData.append("gender", genderInput.current.value);
+          formData.append("father_name", fatherNameInput.current.value);
+          formData.append("mother_name", motherNameInput.current.value);
+          formData.append("address", addressInput.current.value);
+          formData.append("phone", phoneInput.current.value);
+          formData.append("previous_school", previousSchoolInput.current.value);
+
+          if (imageFile) {
+               formData.append("image", imageFile); 
           }
 
-          handleCreate(data);
+          handleCreate(formData); 
      }
 
-
-
-
-
      return (
-          <Box sx={{ maxWidth: 500, mx: 'auto', p: 3 }}>
-               <Typography variant="h4" sx={{ mb: 3 }}>
+          <Paper elevation={3} sx={{ maxWidth: 600, mx: 'auto', p: 4, mt: 4, borderRadius: '20px' }}>
+               <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold' }}>
                     Add New Student
                </Typography>
 
-               {
-                    isLoading && (
-                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
-                              <CircularProgress />
-                              <Typography sx={{ ml: 2 }}>Loading Dashboard Data...</Typography>
-                         </Box>
-                    )
-               }
+               {isLoading && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', my: 3 }}>
+                         <CircularProgress />
+                         <Typography sx={{ mt: 2 }}>Processing Student Data...</Typography>
+                    </Box>
+               )}
 
-               {
-                    error && (
-                         <Alert severity="warning" sx={{ my: 2 }}>
-                              {error}
-                         </Alert>
-                    )
-               }
+               {error && (
+                    <Alert severity="warning" sx={{ my: 2 }}>
+                         {error}
+                    </Alert>
+               )}
 
                <form onSubmit={handleSubmit}>
-                    <TextField fullWidth label="Name" inputRef={nameInput} sx={{ mb: 2 }} />
-                    <TextField fullWidth label="Email" inputRef={emailInput} sx={{ mb: 2 }} />
-                    <TextField type="password" fullWidth label="Password" inputRef={passwordInput} sx={{ mb: 2 }} />
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3 }}>
+                         <Avatar
+                              src={preview}
+                              sx={{ width: 110, height: 110, mb: 1, border: '3px solid #6366f1', boxShadow: '0 0 15px rgba(99, 102, 241, 0.3)' }}
+                         />
+                         <IconButton color="primary" component="label">
+                              <input hidden accept="image/*" type="file" onChange={handleImageChange} />
+                              <PhotoCamera />
+                         </IconButton>
+                         <Typography variant="caption" sx={{ color: 'text.secondary' }}>Upload Student Photo</Typography>
+                    </Box>
+
+                    <TextField fullWidth label="Name" inputRef={nameInput} sx={{ mb: 2 }} required />
+                    <TextField fullWidth label="Email" inputRef={emailInput} sx={{ mb: 2 }} required />
+                    <TextField type="password" fullWidth label="Password" inputRef={passwordInput} sx={{ mb: 2 }} required />
 
                     <Divider sx={{ my: 3 }}>Student Information</Divider>
 
-                    {/* Student Specific Info */}
-                    <TextField fullWidth label="Student ID (Integer)" type="number" inputRef={studentIdInput} sx={{ mb: 2 }} />
+                    <TextField fullWidth label="Student ID (Integer)" type="number" inputRef={studentIdInput} sx={{ mb: 2 }} required />
 
                     <TextField
                          fullWidth
@@ -122,7 +139,7 @@ export default function AddNewStudent() {
                                    max: maxDateStr,
                               }
                          }}
-
+                         required
                     />
 
                     <FormControl fullWidth sx={{ mb: 2 }}>
@@ -144,11 +161,18 @@ export default function AddNewStudent() {
                     <TextField fullWidth label="Phone" inputRef={phoneInput} sx={{ mb: 2 }} />
                     <TextField fullWidth label="Previous School" inputRef={previousSchoolInput} sx={{ mb: 2 }} />
 
-                    <Button type="submit" variant="contained" color="primary" fullWidth size="large">
-                         Register Student
+                    <Button
+                         type="submit"
+                         variant="contained"
+                         color="primary"
+                         fullWidth
+                         size="large"
+                         disabled={isLoading}
+                         sx={{ py: 1.5, borderRadius: '12px', fontWeight: 'bold' }}
+                    >
+                         {isLoading ? 'Registering...' : 'Register Student'}
                     </Button>
                </form>
-          </Box>
+          </Paper>
      )
-
 }
