@@ -7,10 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 class Teacher extends Model
 {
     protected $fillable = [
-        "employee_id",
-        "qualification",
+        "teacher_id",
+        "honor_title",
+        "nrc",
+        "dob",
+        "qualification",          
+        "school_qualification",   
+        "other_skills",
+        "phone",
+        "address",
+        "experience_years",
         "joining_date",
-        "user_id"
+        "user_id"                 
     ];
 
     public function user()
@@ -28,5 +36,10 @@ class Teacher extends Model
             "user_id",
             "id"
         );
+    }
+
+    public function classrooms()
+    {
+        // return $this->hasManyThrough(Classroom::class,User::class);
     }
 }

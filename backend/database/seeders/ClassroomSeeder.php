@@ -13,23 +13,20 @@ class ClassroomSeeder extends Seeder
      */
     public function run(): void
     {
-        $i = 0 ;
-        $classes = [];
+        $classrooms = [
+            ["name" => "hifz - al - quran"],
+            ["name" => "tajweed-al-quran"],
+            ["name" => "aalim regular program"],
+            ["name" => "aalim graduate program"],
+            ["name" => "ilm - e- deen course for woman"],
+            ["name" => "hifz - al - quran (evening class)"],
+            ["name" => "ilm - e - deen course for graduate (men)"],
+            ["name" => "ilm - e - deen course for graduate (women)"],
+        ];
 
-        
-        for($i = 0 ; $i < 12 ; $i++ ){
-            $classes[] = [
-                "name" => "Grade".$i+1,
-                "created_at" => now(),
-                "updated_at" => now(),
-            ];
-        }
-
-        Classroom::create([
-            "name" => "Kindergarten"
-        ]);
-
-        Classroom::insert($classes);
-
+        foreach($classrooms as $classroom)
+            {
+                Classroom::create($classroom);
+            }
     }
 }

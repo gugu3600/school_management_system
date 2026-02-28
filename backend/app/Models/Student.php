@@ -14,9 +14,13 @@ class Student extends Model
         'mother_name',
         'address',
         'phone',
-        'previous_school',
+        "father_occupation",
+        "current_education",
+        "other_qualification",
+        "reason_of_join",
         'user_id',
     ];
+    
 
     public function user()
     {

@@ -39,7 +39,11 @@ $students =
         'mother_name'     => 'Daw ' . fake()->name('female'),
         'address'         => fake()->address(),
         'phone'           => fake()->phoneNumber(),
-        'previous_school' => fake()->company() . " High School",
+        'father_occupation' => fake()->jobTitle(),
+        "current_education" => fake()->randomElement(["Grade 9","Grade 10","High School Passed","Bachelor of Arts","Undergraduate"]),
+        'other_qualification' => fake()->optional()->sentence(3),
+        "reason_of_join" => fake()->paragraph(1),
+
             ]);
         }
 
@@ -49,8 +53,16 @@ $students =
 
             $teachers->assignRole("teacher");
             $teachers->teacher()->create([
-                'employee_id'   => fake()->unique()->numberBetween(100, 999),
-        'qualification' => fake()->randomElement(['B.C.Sc', 'B.C.Tech', 'M.C.Sc', 'PhD (CS)']),
+                'teacher_id'   => fake()->unique()->numberBetween(100, 999),
+                "honor_title" => fake()->randomElement(["Maulana","Ustaz","Hafiz","Mufti","Sheikh"]),
+                "nrc" => fake()->numerify("##/??*(နိုင်)######"),
+                "dob" => fake()->date("Y-m-d", "1995-01-01"),
+        'qualification' => fake()->randomElement(['Aalim Graduate', 'Hifz-ul-Quran', "Qari degree"]),
+        'school_qualification' => fake()->randomElement(['B.A (Computer Science)', 'B.Sc', 'Matriculation Passed']),
+        'other_skills' => fake()->randomElement(['Computer Basic', 'English Language',"LCCI Level 3"]),
+        "phone" => fake()->phoneNumber(),
+        'address' => fake()->address(),
+        'experience_years' => (string) fake()->numberBetween(1, 10),
         'joining_date'  => fake()->date('Y-m-d', 'now'),
             ]);
         }

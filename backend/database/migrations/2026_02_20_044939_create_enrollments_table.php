@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId("student_id")->constrained("users","id")->onDelete("cascade");
             $table->foreignId("classroom_id")->constrained();
             $table->foreignId("academic_year_id")->constrained("academic__years");
-            $table->integer("roll_number");
+            $table->integer("roll_number")->nullable()->default(null);
             $table->timestamps();
         });
     }

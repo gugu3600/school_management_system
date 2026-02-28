@@ -13,8 +13,16 @@ return new class extends Migration
     {
         Schema::create('teachers', function (Blueprint $table) {
             $table->id();
-            $table->integer("employee_id");
+            $table->integer("teacher_id");
+            $table->string("honor_title")->nullable();
+            $table->string("nrc");
+            $table->string("dob");
             $table->string("qualification");
+            $table->string("school_qualification")->nullable();
+            $table->string("other_skills")->nullable();
+            $table->string("phone");
+            $table->string("address");
+            $table->string("experience_years")->nullable();
             $table->date("joining_date");
             $table->foreignId("user_id")->constrained()->onDelete("cascade");
             $table->timestamps();

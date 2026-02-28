@@ -30,7 +30,10 @@ class StudentUpdateRequest extends FormRequest
             "mother_name" => "string|required",
             "address" => "string|required",
             "phone" => "string|required",
-            "previous_school" => "string|required",
+            "father_occupation" => "nullable|string",
+            "current_education" => "required|string",
+            "other_qualification" => "nullable|string",
+            "reason_of_join" => "required|string",
         ];
     }
 }

@@ -35,7 +35,10 @@ class StudentRegisterRequest extends FormRequest
             "mother_name" => "required|string",
             "address" => "required|string",
             "phone" => "required|string",
-            "previous_school" => "required|string"
+            "father_occupation" => "nullable|string",
+            "current_education" => "required|string",
+            "other_qualification" => "nullable|string",
+            "reason_of_join" => "required|string", 
         ];
     }
 }

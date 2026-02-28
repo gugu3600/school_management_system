@@ -23,8 +23,16 @@ class TeacherUpdateRequest extends FormRequest
     {
         return [
             "image" => "nullable|image|file|min:100|max:5120",
-            "employee_id" => "numeric|required",
+            "teacher_id" => "numeric|required",
+            "honor_title" => "string|nullable",
+            "nrc" => "string|required",
+            "dob" => "date|required",
             "qualification" => "string|required",
+            "school-qualification" => "string|required",
+            "other_skills" => "string|nullable",
+            "phone" => "string|required",
+            "address" => "string|required",
+            "experience_years" => "string|nullable",
             "joining_date" => "date|required",
             ];
     }

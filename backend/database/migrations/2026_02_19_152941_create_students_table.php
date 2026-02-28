@@ -20,7 +20,11 @@ return new class extends Migration
             $table->string("mother_name");
             $table->string("address");
             $table->string("phone");
-            $table->string("previous_school");
+            $table->string("father_occupation");
+            $table->string("current_education");
+            $table->string("other_qualification")->nullable();
+            $table->text("reason_of_join");
+            
             $table->foreignId("user_id")->constrained()->onDelete("cascade");
             $table->timestamps();
         });
