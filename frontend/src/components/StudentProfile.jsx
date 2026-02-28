@@ -51,7 +51,7 @@ export default function StudentProfile({ user }) {
                                                   border: '2px solid rgba(255, 255, 255, 0.2)',
                                                   background: 'linear-gradient(45deg, #6366f1, #a855f7)'
                                              }}
-                                        />
+         src={user?.photo ? user?.photo : ""}                               />
                                         <Box sx={{ position: 'absolute', bottom: 12, right: 12, bgcolor: '#10b981', p: 0.5, borderRadius: '50%', border: '4px solid #0f172a' }}>
                                              <VerifiedIcon sx={{ fontSize: 18, color: '#fff' }} />
                                         </Box>
