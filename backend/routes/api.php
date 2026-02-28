@@ -1,9 +1,13 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
+
 use App\Http\Controllers\API\Academic_Year_Controller;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ClassroomController;
 use App\Http\Controllers\API\StudentController;
+
+// use App\Http\Controllers\API\StudentController;
 use App\Http\Controllers\API\TeacherController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\PermissionController;
@@ -41,4 +45,21 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/auth/verify', [AuthController::class, 'verify'])->name('verify');
 
     Route::get('/auth/logout', [AuthController::class, 'logout'])->name('logout');
+});
+
+// routes/api.php ထဲမှာ ထည့်ရန်
+
+Route::get('/init-db', function() {
+    try {
+        Artisan::call('migrate:fresh', [
+            '--seed' => true,
+            '--force' => true,
+        ]);
+        return response()->json([
+            'message' => 'Database Migration and Seeding Successful!',
+            'output' => Artisan::output()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
 });
