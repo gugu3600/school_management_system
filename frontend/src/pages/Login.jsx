@@ -30,7 +30,7 @@ export default function Login() {
      }
 
      {
-          isLoading && authLoading (
+          isLoading &&  (
                <Typography textAlign={"center"}>Loading ...</Typography>
           )
      }
