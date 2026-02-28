@@ -7,6 +7,8 @@ use App\Http\Requests\Teacher\TeacherUpdateRequest;
 use App\Repositories\Teacher\TeacherRepositoryInterface;
 use App\Repositories\User\UserRepositoryInterface;
 use Cloudinary\Cloudinary;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class TeacherController extends BaseController
 {
@@ -31,10 +33,9 @@ class TeacherController extends BaseController
         $userData = [
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => $data['password'],
+            'password' => Hash::make($data['password']),
         ];
 
-        $user = $userRepo->register($userData);
 
         try {
             $path = null;
@@ -55,7 +56,8 @@ class TeacherController extends BaseController
 
                 $path = $upload['secure_url'];
             }
-            $teacher = $this->teacherRepo->store($user, $data, $path);
+       
+            $teacher = DB::transaction(fn () => $this->teacherRepo->store($userRepo->register($userData), $data, $path));
 
             return $this->success($teacher, 'Teacher Created Successfully', 200);
         } catch (\Exception $e) {

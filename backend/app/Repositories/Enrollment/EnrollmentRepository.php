@@ -16,14 +16,16 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
 
           return $enrollments;
      }
+
+
      public function store($studentId,$classroomId)
      {
-          $acdemic_yearId = Academic_Year::where("is_current",true)->first();
+          $acdemic_year = Academic_Year::where("is_current",true)->first();
 
           return Enrollment::create([
                "student_id" => $studentId,
                "classroom_id" => $classroomId,
-               "academic_year_id" => $acdemic_yearId
+               "academic_year_id" => $acdemic_year->id
           ]);
      }
 }

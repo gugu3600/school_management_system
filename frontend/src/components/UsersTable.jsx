@@ -1,7 +1,7 @@
 import React from 'react';
 import {
      Table, TableBody, TableCell, TableContainer,
-     TableHead, TableRow, Paper, Typography, Chip, Avatar, Box, Button, Stack
+     TableHead, TableRow, Paper, Typography, Chip, Avatar, Box, Button, Stack, useTheme
 } from '@mui/material';
 
 import { useNavigate } from 'react-router-dom';
@@ -10,148 +10,174 @@ import {
      Edit as EditIcon,
      Delete as DeleteIcon,
      AdminPanelSettings as AdminIcon,
-     School as TeacherIcon,
-     Face as StudentIcon
+     MenuBook as TeacherIcon,
+     Person as StudentIcon,
+     AccountCircle
 } from '@mui/icons-material';
 
 const UsersTable = ({ users, deleteFun }) => {
      const navigate = useNavigate();
      const { auth } = useApp();
+     const theme = useTheme();
+     const isDark = theme.palette.mode === 'dark';
 
+     // Role Config with Islamic Palette
      const getRoleConfig = (roleName) => {
           const role = roleName?.toLowerCase();
-          if (role === 'admin') return { color: '#f43f5e', icon: <AdminIcon fontSize="small" />, bg: 'rgba(244, 63, 94, 0.1)' };
-          if (role === 'teacher') return { color: '#6366f1', icon: <TeacherIcon fontSize="small" />, bg: 'rgba(99, 102, 241, 0.1)' };
-          if (role === 'student') return { color: '#10b981', icon: <StudentIcon fontSize="small" />, bg: 'rgba(16, 185, 129, 0.1)' };
-          return { color: '#94a3b8', icon: null, bg: 'rgba(148, 163, 184, 0.1)' };
+          if (role === 'admin') return { color: '#B8860B', icon: <AdminIcon fontSize="inherit" />, bg: isDark ? 'rgba(184, 134, 11, 0.2)' : '#fdf6e3' };
+          if (role === 'teacher') return { color: '#2e7d32', icon: <TeacherIcon fontSize="inherit" />, bg: isDark ? 'rgba(46, 125, 50, 0.2)' : '#e8f5e9' };
+          if (role === 'student') return { color: '#0288d1', icon: <StudentIcon fontSize="inherit" />, bg: isDark ? 'rgba(2, 136, 209, 0.2)' : '#e1f5fe' };
+          return { color: '#64748b', icon: <AccountCircle fontSize="inherit" />, bg: isDark ? 'rgba(100, 116, 139, 0.2)' : '#f1f5f9' };
      };
 
      return (
-          <Box sx={{
-               width: '100%',
-               mt: 4,
-               px: { xs: 1, md: 0 }
-          }}>
+          <Box sx={{ width: '100%', mt: 4, px: { xs: 0.5, sm: 1, md: 0 } }}>
                <TableContainer
                     component={Paper}
                     sx={{
-                         background: 'rgba(255, 255, 255, 0.02)',
-                         backdropFilter: 'blur(20px)',
-                         borderRadius: '24px',
-                         border: '1px solid rgba(255, 255, 255, 0.08)',
-                         boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
-                         overflowX: "auto", // Mobile responsiveness
-                         '&::-webkit-scrollbar': { height: '6px' },
-                         '&::-webkit-scrollbar-thumb': { background: 'rgba(255,255,255,0.1)', borderRadius: '10px' }
+                         background: isDark ? 'rgba(30, 41, 59, 0.7)' : '#ffffff',
+                         backdropFilter: 'blur(10px)',
+                         borderRadius: { xs: '12px', md: '20px' },
+                         border: '1px solid',
+                         borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : '#e2e8f0',
+                         boxShadow: isDark ? '0 10px 30px rgba(0,0,0,0.5)' : '0 4px 20px rgba(0,0,0,0.05)',
+                         overflowX: "auto",
                     }}
                >
-                    <Box sx={{ p: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                         <Typography variant="h6" sx={{ color: '#fff', fontWeight: 800, letterSpacing: '0.5px' }}>
-                              User Management
-                         </Typography>
+                    {/* Header Section */}
+                    <Box sx={{
+                         p: { xs: 2, md: 3 },
+                         display: 'flex',
+                         flexDirection: { xs: 'column', sm: 'row' },
+                         justifyContent: 'space-between',
+                         alignItems: { xs: 'flex-start', sm: 'center' },
+                         gap: 2,
+                         borderBottom: '1px solid',
+                         borderColor: isDark ? 'rgba(255,255,255,0.05)' : '#f1f5f9'
+                    }}>
+                         <Box>
+                              <Typography sx={{
+                                   color: isDark ? '#f8fafc' : '#1e293b',
+                                   fontWeight: 800,
+                                   fontSize: { xs: '1rem', sm: '1.2rem', md: '1.4rem', lg: '1.6rem' }, // Dynamic scaling
+                                   lineHeight: 1.2
+                              }}>
+                                   User Management (အသုံးပြုသူများ)
+                              </Typography>
+                              <Typography sx={{
+                                   color: 'text.secondary',
+                                   fontSize: { xs: '0.7rem', md: '0.85rem' }
+                              }}>
+                                   Academic Records & Roles
+                              </Typography>
+                         </Box>
                          <Chip
-                              label={`${users?.length || 0} Total Users`}
-                              sx={{ bgcolor: 'rgba(99, 102, 241, 0.2)', color: '#818cf8', fontWeight: 700, borderRadius: '8px' }}
+                              label={`${users?.length || 0} Total Members`}
+                              sx={{
+                                   bgcolor: isDark ? 'rgba(46, 125, 50, 0.3)' : '#e8f5e9',
+                                   color: isDark ? '#81c784' : '#2e7d32',
+                                   fontWeight: 700,
+                                   fontSize: { xs: '0.65rem', md: '0.75rem' }
+                              }}
                          />
                     </Box>
 
-                    <Table sx={{ minWidth: { xs: 750, md: 900 } }}>
+                    <Table sx={{ minWidth: 800 }}>
                          <TableHead>
-                              <TableRow sx={{ bgcolor: 'rgba(255,255,255,0.03)' }}>
-                                   <TableCell sx={{ color: '#94a3b8', fontWeight: 700, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>USER IDENTITY</TableCell>
-                                   <TableCell sx={{ color: '#94a3b8', fontWeight: 700, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>EMAIL ADDRESS</TableCell>
-                                   <TableCell sx={{ color: '#94a3b8', fontWeight: 700, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>GENDER</TableCell>
-                                   <TableCell sx={{ color: '#94a3b8', fontWeight: 700, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>ROLE STATUS</TableCell>
-                                   <TableCell align="right" sx={{ color: '#94a3b8', fontWeight: 700, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>CONTROLS</TableCell>
+                              <TableRow sx={{ bgcolor: isDark ? 'rgba(0,0,0,0.1)' : '#f8fafc' }}>
+                                   {['IDENTITY', 'EMAIL', 'GENDER', 'ROLE', 'ACTIONS'].map((head) => (
+                                        <TableCell key={head} sx={{
+                                             color: 'text.secondary',
+                                             fontWeight: 700,
+                                             fontSize: { xs: '0.65rem', md: '0.8rem', lg: '0.9rem' },
+                                             py: 2
+                                        }}>
+                                             {head}
+                                        </TableCell>
+                                   ))}
                               </TableRow>
                          </TableHead>
                          <TableBody>
-                              {users && users.length > 0 ? (
+                              {users?.length > 0 ? (
                                    users.map((user) => {
                                         const roleName = user.roles?.[0]?.name || "No Role";
                                         const config = getRoleConfig(roleName);
 
                                         return (
-                                             <TableRow
-                                                  key={user.id}
-                                                  sx={{
-                                                       '&:hover': { bgcolor: 'rgba(255,255,255,0.02)' },
-                                                       transition: '0.3s'
-                                                  }}
-                                             >
-                                                  <TableCell sx={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                                                       <Stack direction="row" spacing={2} alignItems="center">
+                                             <TableRow key={user.id} sx={{ '&:hover': { bgcolor: isDark ? 'rgba(255,255,255,0.02)' : '#fafafa' } }}>
+                                                  <TableCell>
+                                                       <Stack direction="row" spacing={{ xs: 1, md: 2 }} alignItems="center">
                                                             <Avatar
-                                                                 onClick={() => {if(user.id !== 1 ) {navigate(`/profile/${user.id}`)}}}
+                                                                 onClick={() => user.id !== 1 && navigate(`/profile/${user.id}`)}
+                                                                 src={user.photo?.path}
                                                                  sx={{
-                                                                      width: 42,
-                                                                      height: 42,
+                                                                      width: { xs: 35, sm: 40, md: 45 },
+                                                                      height: { xs: 35, sm: 40, md: 45 },
                                                                       cursor: 'pointer',
-                                                                      background: `linear-gradient(45deg, ${config.color}, #000)`,
-                                                                      fontSize: '1rem',
-                                                                      fontWeight: 800,
-                                                                      boxShadow: `0 0 15px ${config.color}44`
+                                                                      border: '2px solid',
+                                                                      borderColor: config.color,
+                                                                      fontSize: { xs: '0.8rem', md: '1rem' }
                                                                  }}
                                                             >
                                                                  {user.name?.charAt(0).toUpperCase()}
                                                             </Avatar>
-                                                            <Typography sx={{ color: '#f1f5f9', fontWeight: 600 }} sx={{cursor : "pointer"}} onClick={e => {e.stopPropagation; if(user.id !== 1){navigate(`/profile/${user.id}`)}}}>{user.name}</Typography>
+                                                            <Typography
+                                                                 onClick={() => user.id !== 1 && navigate(`/profile/${user.id}`)}
+                                                                 sx={{
+                                                                      color: isDark ? '#f1f5f9' : '#334155',
+                                                                      fontWeight: 600,
+                                                                      cursor: 'pointer',
+                                                                      fontSize: { xs: '0.85rem', sm: '0.95rem', md: '1rem', lg: '1.1rem' } // Scaling name
+                                                                 }}
+                                                            >
+                                                                 {user.name}
+                                                            </Typography>
                                                        </Stack>
                                                   </TableCell>
 
-                                                  <TableCell sx={{ color: '#cbd5e1', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                                                  <TableCell sx={{
+                                                       color: 'text.secondary',
+                                                       fontSize: { xs: '0.75rem', md: '0.9rem' }
+                                                  }}>
                                                        {user.email}
                                                   </TableCell>
 
-                                                  <TableCell sx={{ color: '#94a3b8', borderBottom: '1px solid rgba(255,255,255,0.03)', textTransform: 'capitalize' }}>
-                                                       {user?.student?.gender || user?.gender || "-"}
+                                                  <TableCell sx={{
+                                                       color: 'text.secondary',
+                                                       fontSize: { xs: '0.75rem', md: '0.9rem' },
+                                                       textTransform: 'capitalize'
+                                                  }}>
+                                                       {user?.student?.gender || user?.teacher?.gender || user?.gender || "-"}
                                                   </TableCell>
 
-                                                  <TableCell sx={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                                                  <TableCell>
                                                        <Chip
                                                             icon={config.icon}
                                                             label={roleName}
                                                             sx={{
                                                                  bgcolor: config.bg,
                                                                  color: config.color,
-                                                                 fontWeight: 800,
-                                                                 borderRadius: '10px',
-                                                                 textTransform: 'uppercase',
-                                                                 fontSize: '0.65rem'
+                                                                 fontWeight: 700,
+                                                                 fontSize: { xs: '0.6rem', md: '0.7rem' },
+                                                                 height: { xs: 24, md: 28 }
                                                             }}
                                                        />
                                                   </TableCell>
 
-                                                  <TableCell align="right" sx={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                                                  <TableCell align="right">
                                                        {auth && user.id !== auth.id && (
-                                                            <Stack direction="row" spacing={1} justifyContent="flex-end">
+                                                            <Stack direction="row" spacing={0.5} justifyContent="flex-end">
                                                                  <Button
-                                                                      onClick={() => {
-                                                                           roleName.toLowerCase() === "student"
-                                                                                ? navigate(`/admin/students/edit/${user.id}`)
-                                                                                : navigate(`/admin/teachers/edit/${user.id}`)
-                                                                      }}
-                                                                      sx={{
-                                                                           minWidth: '40px',
-                                                                           height: '40px',
-                                                                           borderRadius: '12px',
-                                                                           color: '#818cf8',
-                                                                           '&:hover': { bgcolor: 'rgba(99, 102, 241, 0.1)' }
-                                                                      }}
+                                                                      onClick={() => roleName.toLowerCase() === "student" ? navigate(`/admin/students/edit/${user.id}`) : navigate(`/admin/teachers/edit/${user.id}`)}
+                                                                      sx={{ minWidth: { xs: 30, md: 40 }, color: isDark ? '#818cf8' : '#4f46e5' }}
                                                                  >
-                                                                      <EditIcon fontSize="small" />
+                                                                      <EditIcon sx={{ fontSize: { xs: 18, md: 20 } }} />
                                                                  </Button>
                                                                  <Button
                                                                       onClick={() => deleteFun(user.id)}
-                                                                      sx={{
-                                                                           minWidth: '40px',
-                                                                           height: '40px',
-                                                                           borderRadius: '12px',
-                                                                           color: '#f43f5e',
-                                                                           '&:hover': { bgcolor: 'rgba(244, 63, 94, 0.1)' }
-                                                                      }}
+                                                                      sx={{ minWidth: { xs: 30, md: 40 }, color: '#ef4444' }}
                                                                  >
-                                                                      <DeleteIcon fontSize="small" />
+                                                                      <DeleteIcon sx={{ fontSize: { xs: 18, md: 20 } }} />
                                                                  </Button>
                                                             </Stack>
                                                        )}
@@ -161,8 +187,8 @@ const UsersTable = ({ users, deleteFun }) => {
                                    })
                               ) : (
                                    <TableRow>
-                                        <TableCell colSpan={5} align="center" sx={{ py: 10, color: '#64748b' }}>
-                                             No users found in the database.
+                                        <TableCell colSpan={5} align="center" sx={{ py: 10 }}>
+                                             No records found.
                                         </TableCell>
                                    </TableRow>
                               )}

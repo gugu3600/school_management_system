@@ -1,21 +1,47 @@
 import { useCreateStudent } from "../../hooks/createStudent";
+import { useClassrooms } from "../../hooks/classrooms";
 import {
      Box, Typography, Alert, TextField, Button, CircularProgress,
-     MenuItem, Divider, FormControl, InputLabel, Select, Avatar, IconButton, Paper
+     MenuItem, Divider, FormControl, InputLabel, Select, Avatar, IconButton, Paper,
+     Checkbox, ListItemText, OutlinedInput, Chip
 } from "@mui/material";
-import { PhotoCamera } from "@mui/icons-material"; // Append
+import { PhotoCamera } from "@mui/icons-material";
 import { useRef, useState } from "react";
 import { useApp } from "../../ThemeApp";
+import { useNavigate } from "react-router-dom";
+
+// FormRow Component ကို Render အပြင်ဘက်သို့ ထုတ်ထားသည် (Error ကာကွယ်ရန်)
+const FormRow = ({ label, mmLabel, children }) => (
+     <Box sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', sm: 'row' },
+          alignItems: { sm: 'center' },
+          gap: { xs: 0.5, sm: 2 },
+          mb: 3
+     }}>
+          <Box sx={{ minWidth: { sm: '200px' } }}>
+               <Typography sx={{ fontWeight: 600, color: 'text.primary', fontSize: '0.95rem' }}>
+                    {label}
+               </Typography>
+               <Typography sx={{ color: 'text.secondary', fontSize: '0.8rem' }}>
+                    ({mmLabel})
+               </Typography>
+          </Box>
+          <Box sx={{ flex: 1, width: '100%' }}>{children}</Box>
+     </Box>
+);
 
 export default function AddNewStudent() {
      const { handleCreate, isLoading } = useCreateStudent();
+     const { classrooms } = useClassrooms();
      const [error, setError] = useState(null);
      const { setGlobalMsg } = useApp();
-
-     // --- Append: Image Upload States ---
+     const navigate = useNavigate();
      const [preview, setPreview] = useState(null);
      const [imageFile, setImageFile] = useState(null);
+     const [selectedClassrooms, setSelectedClassrooms] = useState([]);
 
+     // Refs
      const nameInput = useRef();
      const emailInput = useRef();
      const passwordInput = useRef();
@@ -26,7 +52,19 @@ export default function AddNewStudent() {
      const motherNameInput = useRef();
      const addressInput = useRef();
      const phoneInput = useRef();
-     const previousSchoolInput = useRef();
+     const fatherOccuInput = useRef();
+     const currentEduInput = useRef();
+     const otherQualiInput = useRef();
+     const reasonInput = useRef();
+
+     // Calendar Age Logic (5 to 18)
+     const getLimitDate = (yearsAgo) => {
+          const d = new Date();
+          d.setFullYear(d.getFullYear() - yearsAgo);
+          return d.toISOString().split('T')[0];
+     };
+     const minDateStr = getLimitDate(18);
+     const maxDateStr = getLimitDate(5);
 
      const handleImageChange = e => {
           const file = e.target.files[0];
@@ -36,141 +74,165 @@ export default function AddNewStudent() {
           }
      };
 
-     const getLimitDate = yearsAgo => {
-          const d = new Date();
-          d.setFullYear(d.getFullYear() - yearsAgo);
-          return d.toISOString().split('T')[0];
-     }
-
-     const minDateStr = getLimitDate(18);
-     const maxDateStr = getLimitDate(5);
+     const handleClassroomChange = (event) => {
+          const { target: { value } } = event;
+          setSelectedClassrooms(typeof value === 'string' ? value.split(',') : value);
+     };
 
      const handleSubmit = (e) => {
           e.preventDefault();
-
-          const birthDate = new Date(dobInput.current.value);
-          const today = new Date();
-
-          if (!dobInput.current.value) {
-               setError("Date of birth is required");
-               return 0;
+          if (selectedClassrooms.length === 0) {
+               setError("Please select at least one classroom (အနည်းဆုံး အတန်းတစ်ခု ရွေးချယ်ပေးပါ)");
+               return;
           }
-
-          let age = today.getFullYear() - birthDate.getFullYear();
-
-          if (age < 5 || age > 18) {
-               setGlobalMsg("You can't add new Student");
-               setError("Student age must be between 5 and 18 years old");
-               return false;
-          }
-
-          setError(null);
 
           const formData = new FormData();
           formData.append("name", nameInput.current.value);
           formData.append("email", emailInput.current.value);
           formData.append("password", passwordInput.current.value);
-          formData.append("student_id", Number(studentIdInput.current.value));
+          formData.append("student_id", studentIdInput.current.value);
           formData.append("dob", dobInput.current.value);
           formData.append("gender", genderInput.current.value);
           formData.append("father_name", fatherNameInput.current.value);
           formData.append("mother_name", motherNameInput.current.value);
           formData.append("address", addressInput.current.value);
           formData.append("phone", phoneInput.current.value);
-          formData.append("previous_school", previousSchoolInput.current.value);
+          formData.append("father_occupation", fatherOccuInput.current.value);
+          formData.append("current_education", currentEduInput.current.value);
+          formData.append("other_qualification", otherQualiInput.current.value);
+          formData.append("reason_of_join", reasonInput.current.value);
 
-          if (imageFile) {
-               formData.append("image", imageFile); 
-          }
+          selectedClassrooms.forEach(id => formData.append("classroom_ids[]", id));
+          if (imageFile) formData.append("image", imageFile);
 
-          handleCreate(formData); 
+          handleCreate(formData);
+          navigate("/admin/users");
      }
 
      return (
-          <Paper elevation={3} sx={{ maxWidth: 600, mx: 'auto', p: 4, mt: 4, borderRadius: '20px' }}>
-               <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold' }}>
-                    Add New Student
+          <Paper elevation={0} sx={{
+               maxWidth: 850, mx: 'auto', p: { xs: 2, md: 4 }, mt: 2,
+               borderRadius: '16px', border: '1px solid', borderColor: 'divider',
+               bgcolor: (theme) => theme.palette.mode === 'light' ? '#fcfcfc' : 'background.paper'
+          }}>
+               <Typography variant="h5" sx={{ mb: 4, fontWeight: 'bold', textAlign: 'center', color: 'primary.main' }}>
+                    Student Registration (ကျောင်းသားအပ်နှံခြင်း)
                </Typography>
 
-               {isLoading && (
-                    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', my: 3 }}>
-                         <CircularProgress />
-                         <Typography sx={{ mt: 2 }}>Processing Student Data...</Typography>
-                    </Box>
-               )}
-
-               {error && (
-                    <Alert severity="warning" sx={{ my: 2 }}>
-                         {error}
-                    </Alert>
-               )}
+               {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
 
                <form onSubmit={handleSubmit}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3 }}>
-                         <Avatar
-                              src={preview}
-                              sx={{ width: 110, height: 110, mb: 1, border: '3px solid #6366f1', boxShadow: '0 0 15px rgba(99, 102, 241, 0.3)' }}
-                         />
-                         <IconButton color="primary" component="label">
-                              <input hidden accept="image/*" type="file" onChange={handleImageChange} />
-                              <PhotoCamera />
-                         </IconButton>
-                         <Typography variant="caption" sx={{ color: 'text.secondary' }}>Upload Student Photo</Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 4 }}>
+                         <Box sx={{ position: 'relative' }}>
+                              <Avatar src={preview} sx={{ width: 110, height: 110, border: '3px solid', borderColor: 'primary.main' }} />
+                              <IconButton color="primary" component="label" sx={{ position: 'absolute', bottom: -5, right: -5, bgcolor: 'background.paper', boxShadow: 2 }}>
+                                   <input hidden accept="image/*" type="file" onChange={handleImageChange} />
+                                   <PhotoCamera />
+                              </IconButton>
+                         </Box>
                     </Box>
 
-                    <TextField fullWidth label="Name" inputRef={nameInput} sx={{ mb: 2 }} required />
-                    <TextField fullWidth label="Email" inputRef={emailInput} sx={{ mb: 2 }} required />
-                    <TextField type="password" fullWidth label="Password" inputRef={passwordInput} sx={{ mb: 2 }} required />
+                    <Divider sx={{ mb: 4, fontWeight: 600 }}>ACCOUNT ACCESS</Divider>
 
-                    <Divider sx={{ my: 3 }}>Student Information</Divider>
+                    <FormRow label="Full Name" mmLabel="အမည်အပြည့်အစုံ">
+                         <TextField fullWidth size="small" inputRef={nameInput} placeholder="Enter Name" required sx={{ bgcolor: 'background.default' }} />
+                    </FormRow>
 
-                    <TextField fullWidth label="Student ID (Integer)" type="number" inputRef={studentIdInput} sx={{ mb: 2 }} required />
+                    <FormRow label="Email Address" mmLabel="အီးမေးလ်">
+                         <TextField fullWidth size="small" type="email" inputRef={emailInput} placeholder="example@mail.com" required sx={{ bgcolor: 'background.default' }} />
+                    </FormRow>
 
-                    <TextField
-                         fullWidth
-                         label="Date of Birth"
-                         type="date"
-                         inputRef={dobInput}
-                         sx={{ mb: 2 }}
-                         InputLabelProps={{ shrink: true }}
-                         slotProps={{
-                              htmlInput: {
-                                   min: minDateStr,
-                                   max: maxDateStr,
-                              }
-                         }}
-                         required
-                    />
+                    <FormRow label="Password" mmLabel="လျှို့ဝှက်နံပါတ်">
+                         <TextField fullWidth size="small" type="password" inputRef={passwordInput} placeholder="At least 8 characters" required sx={{ bgcolor: 'background.default' }} />
+                    </FormRow>
 
-                    <FormControl fullWidth sx={{ mb: 2 }}>
-                         <InputLabel id="gender-label">Gender</InputLabel>
-                         <Select
-                              labelId="gender-label"
-                              label="Gender"
-                              inputRef={genderInput}
-                              defaultValue="male"
-                         >
-                              <MenuItem value="male">Male</MenuItem>
-                              <MenuItem value="female">Female</MenuItem>
+                    <Divider sx={{ my: 4, fontWeight: 600 }}>STUDENT DETAILS</Divider>
+
+                    <FormRow label="Student ID" mmLabel="ကျောင်းသားနံပါတ်">
+                         <TextField fullWidth size="small" type="number" inputRef={studentIdInput} placeholder="Integer only" required sx={{ bgcolor: 'background.default' }} />
+                    </FormRow>
+
+                    <FormRow label="Select Classrooms" mmLabel="အတန်းများရွေးချယ်ပါ">
+                         <FormControl fullWidth size="small" sx={{ bgcolor: 'background.default' }}>
+                              <InputLabel>Choose Classes</InputLabel>
+                              <Select
+                                   multiple
+                                   value={selectedClassrooms}
+                                   onChange={handleClassroomChange}
+                                   input={<OutlinedInput label="Choose Classes" />}
+                                   renderValue={(selected) => (
+                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                             {selected.map((value) => (
+                                                  <Chip key={value} label={classrooms?.find(c => c.id === value)?.name} size="small" color="primary" variant="outlined" />
+                                             ))}
+                                        </Box>
+                                   )}
+                              >
+                                   {classrooms?.map((c) => (
+                                        <MenuItem key={c.id} value={c.id}>
+                                             <Checkbox checked={selectedClassrooms.indexOf(c.id) > -1} />
+                                             <ListItemText primary={c.name} />
+                                        </MenuItem>
+                                   ))}
+                              </Select>
+                         </FormControl>
+                    </FormRow>
+
+                    <FormRow label="Date of Birth" mmLabel="မွေးသက္ကရာဇ်">
+                         <TextField
+                              fullWidth size="small" type="date" inputRef={dobInput}
+                              InputLabelProps={{ shrink: true }}
+                              slotProps={{ htmlInput: { min: minDateStr, max: maxDateStr } }}
+                              required sx={{ bgcolor: 'background.default' }}
+                         />
+                    </FormRow>
+
+                    <FormRow label="Gender" mmLabel="ကျား/မ">
+                         <Select fullWidth size="small" inputRef={genderInput} defaultValue="male" sx={{ bgcolor: 'background.default' }}>
+                              <MenuItem value="male">Male (ကျား)</MenuItem>
+                              <MenuItem value="female">Female (မ)</MenuItem>
                          </Select>
-                    </FormControl>
+                    </FormRow>
 
-                    <TextField fullWidth label="Father Name" inputRef={fatherNameInput} sx={{ mb: 2 }} />
-                    <TextField fullWidth label="Mother Name" inputRef={motherNameInput} sx={{ mb: 2 }} />
-                    <TextField fullWidth label="Address" multiline rows={2} inputRef={addressInput} sx={{ mb: 2 }} />
-                    <TextField fullWidth label="Phone" inputRef={phoneInput} sx={{ mb: 2 }} />
-                    <TextField fullWidth label="Previous School" inputRef={previousSchoolInput} sx={{ mb: 2 }} />
+                    <FormRow label="Current Education" mmLabel="လက်ရှိပညာအရည်အချင်း">
+                         <TextField fullWidth size="small" inputRef={currentEduInput} placeholder="e.g. Grade 11" required sx={{ bgcolor: 'background.default' }} />
+                    </FormRow>
+
+                    <Divider sx={{ my: 4, fontWeight: 600 }}>FAMILY & ADDRESS</Divider>
+
+                    <FormRow label="Father Name" mmLabel="ဖခင်အမည်">
+                         <TextField fullWidth size="small" inputRef={fatherNameInput} required sx={{ bgcolor: 'background.default' }} />
+                    </FormRow>
+
+                    <FormRow label="Father Occupation" mmLabel="ဖခင်အလုပ်အကိုင်">
+                         <TextField fullWidth size="small" inputRef={fatherOccuInput} sx={{ bgcolor: 'background.default' }} />
+                    </FormRow>
+
+                    <FormRow label="Mother Name" mmLabel="မိခင်အမည်">
+                         <TextField fullWidth size="small" inputRef={motherNameInput} required sx={{ bgcolor: 'background.default' }} />
+                    </FormRow>
+
+                    <FormRow label="Phone Number" mmLabel="ဖုန်းနံပါတ်">
+                         <TextField fullWidth size="small" inputRef={phoneInput} placeholder="09..." required sx={{ bgcolor: 'background.default' }} />
+                    </FormRow>
+
+                    <FormRow label="Home Address" mmLabel="နေရပ်လိပ်စာ">
+                         <TextField fullWidth size="small" multiline rows={2} inputRef={addressInput} required sx={{ bgcolor: 'background.default' }} />
+                    </FormRow>
+
+                    <FormRow label="Other Qualification" mmLabel="အခြားအရည်အချင်း">
+                         <TextField fullWidth size="small" inputRef={otherQualiInput} sx={{ bgcolor: 'background.default' }} />
+                    </FormRow>
+
+                    <FormRow label="Reason for Joining" mmLabel="တက်ရောက်လိုသည့်အကြောင်းရင်း">
+                         <TextField fullWidth size="small" multiline rows={3} inputRef={reasonInput} placeholder="Write something..." required sx={{ bgcolor: 'background.default' }} />
+                    </FormRow>
 
                     <Button
-                         type="submit"
-                         variant="contained"
-                         color="primary"
-                         fullWidth
-                         size="large"
-                         disabled={isLoading}
-                         sx={{ py: 1.5, borderRadius: '12px', fontWeight: 'bold' }}
+                         type="submit" variant="contained" color="primary" fullWidth size="large"
+                         disabled={isLoading} sx={{ mt: 3, py: 1.5, borderRadius: '10px', fontWeight: 'bold' }}
                     >
-                         {isLoading ? 'Registering...' : 'Register Student'}
+                         {isLoading ? <CircularProgress size={24} color="inherit" /> : 'REGISTER STUDENT (စာရင်းသွင်းမည်)'}
                     </Button>
                </form>
           </Paper>

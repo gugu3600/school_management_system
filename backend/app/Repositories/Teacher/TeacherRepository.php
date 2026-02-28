@@ -16,8 +16,19 @@ class TeacherRepository implements TeacherRepositoryInterface
      {
           $user->assignRole("teacher");
           $teacher = $user->teacher()->create([
-               "employee_id" => $data["employee_id"],
-            "qualification" => $data["qualification"],
+               "teacher_id" => $data["teacher_id"],
+            "honor_title" => $data["honor_title"],
+            "nrc" =>  $data["nrc"],
+            "dob" =>  $data["dob"],
+            "qualification" =>  $data["qualification"],
+            "school_qualification" =>  $data["school_qualification"],
+            "other_skills" =>  $data["other_skills"],
+
+            "phone" =>  $data["phone"],
+
+            "address" =>  $data["address"],
+
+            "experience_years" =>  $data["experience_years"],
             "joining_date" =>  $data["joining_date"],
           ]);
           

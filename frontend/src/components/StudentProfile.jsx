@@ -1,144 +1,122 @@
-import { Grid, Chip, Divider, Paper, Stack, Avatar, Box, Typography, Container, Button } from "@mui/material";
+import { Grid, Chip, Divider, Paper, Stack, Avatar, Box, Typography, Container, Button, useTheme } from "@mui/material";
 import {
-     School as SchoolIcon,
-     Hub as HubIcon,
-     Business as BusinessIcon,
      CalendarMonth as CalendarMonthIcon,
      Person as PersonIcon,
      LocationOn as LocationOnIcon,
-     CalendarToday as CalendarTodayIcon,
      Email as EmailIcon,
      Verified as VerifiedIcon,
-     LocalPhone as PhoneIcon
+     LocalPhone as PhoneIcon,
+     School as SchoolIcon
 } from "@mui/icons-material";
 
 export default function StudentProfile({ user }) {
+     const theme = useTheme();
+     const isDark = theme.palette.mode === 'dark';
+
      return (
           <Box sx={{
                minHeight: '100vh',
-               width: '100vw', // Full width background
-               position: 'relative',
-               left: '50%',
-               right: '50%',
-               marginLeft: '-50vw',
-               marginRight: '-50vw',
-               background: 'radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%)',
-               overflowX: 'hidden',
-               pt: { xs: 4, md: 10 },
+               bgcolor: isDark ? '#020617' : '#f8fafc',
+               pt: { xs: 2, md: 6 },
                pb: 8
           }}>
-               {/* Background Glow Effect */}
-               <Box sx={{ position: 'absolute', top: '10%', left: '10%', width: '300px', height: '300px', background: 'rgba(99, 102, 241, 0.15)', filter: 'blur(100px)', borderRadius: '50%', zIndex: 0 }} />
-               <Box sx={{ position: 'absolute', bottom: '10%', right: '10%', width: '400px', height: '400px', background: 'rgba(244, 63, 94, 0.1)', filter: 'blur(120px)', borderRadius: '50%', zIndex: 0 }} />
-
-               <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
-                    <Grid container spacing={4}>
-                         {/* Left Column: Glassmorphism Profile */}
-                         <Grid item xs={12} md={4}>
+               <Container maxWidth="lg">
+                    <Grid container spacing={3}>
+                         {/* Profile Header Card */}
+                         <Grid item xs={12}>
                               <Paper elevation={0} sx={{
-                                   p: 5,
-                                   textAlign: 'center',
-                                   borderRadius: '32px',
-                                   background: 'rgba(255, 255, 255, 0.02)',
-                                   backdropFilter: 'blur(20px)',
-                                   border: '1px solid rgba(255, 255, 255, 0.08)',
-                                   boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.8)'
+                                   p: { xs: 3, md: 5 },
+                                   borderRadius: '24px',
+                                   background: isDark ? 'rgba(30, 41, 59, 0.5)' : '#ffffff',
+                                   border: '1px solid',
+                                   borderColor: isDark ? 'rgba(255,255,255,0.1)' : '#e2e8f0',
+                                   display: 'flex',
+                                   flexDirection: { xs: 'column', md: 'row' },
+                                   alignItems: 'center',
+                                   gap: 4
                               }}>
-                                   <Box sx={{ position: 'relative', display: 'inline-block' }}>
+                                   <Box sx={{ position: 'relative' }}>
                                         <Avatar
+                                             src={user?.photo?.path}
                                              sx={{
-                                                  width: 160, height: 160, mx: 'auto',
-                                                  border: '2px solid rgba(255, 255, 255, 0.2)',
-                                                  background: 'linear-gradient(45deg, #6366f1, #a855f7)'
+                                                  width: { xs: 120, md: 160 },
+                                                  height: { xs: 120, md: 160 },
+                                                  border: '4px solid #10b981'
                                              }}
-         src={user?.photo ? user?.photo : ""}                               />
-                                        <Box sx={{ position: 'absolute', bottom: 12, right: 12, bgcolor: '#10b981', p: 0.5, borderRadius: '50%', border: '4px solid #0f172a' }}>
-                                             <VerifiedIcon sx={{ fontSize: 18, color: '#fff' }} />
-                                        </Box>
+                                        />
+                                        <VerifiedIcon sx={{ position: 'absolute', bottom: 10, right: 10, color: '#10b981', bgcolor: '#fff', borderRadius: '50%' }} />
                                    </Box>
 
-                                   <Typography variant="h4" sx={{ mt: 3, fontWeight: 900, color: '#fff', letterSpacing: '-1px' }}>
-                                        {user?.name || ""}
-                                   </Typography>
-                                   <Typography sx={{ color: '#94a3b8', fontWeight: 600, mb: 3 }}>
-                                        ID: STUDENT-{user?.student_id || ""}
-                                   </Typography>
-
-                                   <Stack direction="row" spacing={1} justifyContent="center" sx={{ mb: 4 }}>
-                                        <Chip label="Level 4" sx={{ background: 'linear-gradient(90deg, #6366f1, #4f46e5)', color: '#fff', fontWeight: 700 }} />
-                                        <Chip label={user?.gender || ""} variant="outlined" sx={{ color: '#fff', borderColor: 'rgba(255,255,255,0.2)' }} />
-                                   </Stack>
-
-                                   <Divider sx={{ my: 3, borderColor: 'rgba(255,255,255,0.05)' }} />
-
-                                   <Box sx={{ textAlign: 'left' }}>
-                                        <Typography variant="caption" sx={{ color: '#6366f1', fontWeight: 800, letterSpacing: 1.5 }}>OVERALL PROGRESS</Typography>
-                                        <Typography variant="h5" sx={{ color: '#fff', fontWeight: 800, my: 1 }}>88%</Typography>
-                                        <Box sx={{ height: 8, bgcolor: 'rgba(255,255,255,0.05)', borderRadius: 10 }}>
-                                             <Box sx={{ width: '88%', height: '100%', background: 'linear-gradient(90deg, #6366f1, #a855f7)', borderRadius: 10 }} />
-                                        </Box>
+                                   <Box sx={{ textAlign: { xs: 'center', md: 'left' }, flex: 1 }}>
+                                        <Typography variant="h4" sx={{ fontWeight: 800, color: isDark ? '#fff' : '#1e293b' }}>
+                                             {user?.name}
+                                        </Typography>
+                                        <Typography sx={{ color: 'text.secondary', fontWeight: 600, mb: 2 }}>
+                                             ID: {user?.student_id || "N/A"}
+                                        </Typography>
+                                        <Stack direction="row" spacing={1} justifyContent={{ xs: 'center', md: 'flex-start' }}>
+                                             <Chip icon={<SchoolIcon fontSize="small" />} label="Student (ကျောင်းသား)" color="primary" sx={{ fontWeight: 700 }} />
+                                             <Chip label={user?.gender} variant="outlined" />
+                                        </Stack>
                                    </Box>
                               </Paper>
                          </Grid>
 
-                         {/* Right Column: Detailed Cards */}
-                         <Grid item xs={12} md={8}>
-                              <Stack spacing={4}>
-                                   {/* Info Grid */}
-                                   <Paper elevation={0} sx={{ p: 4, borderRadius: '32px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                                        <Typography variant="h6" sx={{ color: '#fff', fontWeight: 800, mb: 4 }}>Personal Information</Typography>
-                                        <Grid container spacing={2}>
-                                             {[
-                                                  { label: 'Date of Birth', val: user?.dob || "", icon: <CalendarTodayIcon /> },
-                                                  { label: 'Institutional Email', val: user?.email || "", icon: <EmailIcon /> },
-                                                  { label: 'Father Name', val: user?.father_name || "", icon: <PersonIcon /> },
-                                                  { label: 'Mother Name', val: user?.mother_name || "", icon: <PersonIcon /> },
-                                             ].map((item, i) => (
-                                                  <Grid item xs={12} sm={6} key={i}>
-                                                       <Box sx={{ p: 3, borderRadius: '24px', bgcolor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.03)' }}>
-                                                            <Stack direction="row" spacing={2} alignItems="center">
-                                                                 <Box sx={{ color: '#6366f1' }}>{item.icon}</Box>
-                                                                 <Box>
-                                                                      <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 700 }}>{item.label}</Typography>
-                                                                      <Typography sx={{ color: '#f1f5f9', fontWeight: 600 }}>{item.val}</Typography>
-                                                                 </Box>
-                                                            </Stack>
-                                                       </Box>
-                                                  </Grid>
-                                             ))}
-                                        </Grid>
-                                   </Paper>
+                         {/* Details Column */}
+                         <Grid item xs={12} md={5}>
+                              <Paper sx={{ p: 3, borderRadius: '20px', bgcolor: isDark ? 'rgba(30, 41, 59, 0.3)' : '#fff' }}>
+                                   <Typography variant="h6" sx={{ mb: 3, fontWeight: 700 }}>Personal Info</Typography>
+                                   <Stack spacing={2.5}>
+                                        <InfoRow icon={<CalendarMonthIcon color="primary" />} label="Date of Birth" val={user?.dob} />
+                                        <InfoRow icon={<EmailIcon color="primary" />} label="Email Address" val={user?.email} />
+                                        <InfoRow icon={<PhoneIcon color="primary" />} label="Contact Number" val={user?.phone} />
+                                        <InfoRow icon={<LocationOnIcon color="primary" />} label="Address" val={user?.address} />
+                                   </Stack>
+                              </Paper>
+                         </Grid>
 
-                                   {/* Address & Phone */}
-                                   <Paper elevation={0} sx={{
-                                        p: 4, borderRadius: '32px',
-                                        background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(168, 85, 247, 0.05) 100%)',
-                                        border: '1px solid rgba(99, 102, 241, 0.2)'
-                                   }}>
-                                        <Grid container spacing={4} alignItems="center">
-                                             <Grid item xs={12} sm={7}>
-                                                  <Stack spacing={2}>
-                                                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                                                            <LocationOnIcon sx={{ color: '#6366f1' }} />
-                                                            <Typography sx={{ color: '#cbd5e1', lineHeight: 1.6 }}>{user?.address || ""}</Typography>
-                                                       </Box>
-                                                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                                                            <PhoneIcon sx={{ color: '#6366f1' }} />
-                                                            <Typography sx={{ color: '#fff', fontWeight: 800 }}>{user?.phone || ""}</Typography>
-                                                       </Box>
-                                                  </Stack>
-                                             </Grid>
-                                             <Grid item xs={12} sm={5} sx={{ textAlign: { sm: 'right' } }}>
-                                                  <Button variant="contained" sx={{ borderRadius: '12px', background: '#fff', color: '#000', fontWeight: 800, '&:hover': { bgcolor: '#cbd5e1' } }}>
-                                                       Contact Support
-                                                  </Button>
-                                             </Grid>
+                         <Grid item xs={12} md={7}>
+                              <Paper sx={{ p: 3, borderRadius: '20px', bgcolor: isDark ? 'rgba(30, 41, 59, 0.3)' : '#fff' }}>
+                                   <Typography variant="h6" sx={{ mb: 3, fontWeight: 700 }}>Family & Education</Typography>
+                                   <Grid container spacing={2}>
+                                        <Grid item xs={12} sm={6}>
+                                             <DataBox label="Father's Name" val={user?.father_name} />
                                         </Grid>
-                                   </Paper>
-                              </Stack>
+                                        <Grid item xs={12} sm={6}>
+                                             <DataBox label="Mother's Name" val={user?.mother_name} />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                             <Divider sx={{ my: 1 }} />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                             <DataBox label="Current Education" val={user?.current_education} />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                             <DataBox label="Reason for Joining" val={user?.reason_of_join} />
+                                        </Grid>
+                                   </Grid>
+                              </Paper>
                          </Grid>
                     </Grid>
                </Container>
           </Box>
      );
 }
+
+// Helper Components
+const InfoRow = ({ icon, label, val }) => (
+     <Stack direction="row" spacing={2} alignItems="center">
+          <Box sx={{ p: 1, bgcolor: 'rgba(16, 185, 129, 0.1)', borderRadius: '10px' }}>{icon}</Box>
+          <Box>
+               <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>{label}</Typography>
+               <Typography variant="body1" sx={{ fontWeight: 600 }}>{val || "-"}</Typography>
+          </Box>
+     </Stack>
+);
+
+const DataBox = ({ label, val }) => (
+     <Box sx={{ p: 2, bgcolor: 'action.hover', borderRadius: '12px' }}>
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>{label}</Typography>
+          <Typography variant="body1" sx={{ fontWeight: 600 }}>{val || "-"}</Typography>
+     </Box>
+);

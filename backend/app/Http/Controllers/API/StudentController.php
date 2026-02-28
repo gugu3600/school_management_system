@@ -10,7 +10,7 @@ use App\Repositories\User\UserRepositoryInterface;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 use Cloudinary\Cloudinary;
-
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends BaseController
 {
@@ -65,9 +65,11 @@ class StudentController extends BaseController
 
                 $path = $upload['secure_url'];
             }
-        $user = $this->userRepo->register($userData);
         
-        $student = $this->studentRepo->store($user, $data, $path);
+       $student = DB::transaction(fn() => $this->studentRepo->store(
+        $this->userRepo->register($userData),
+        $data,$path
+       ));
 
         return $this->success($student, 'Students Created successfully', 200);
         }

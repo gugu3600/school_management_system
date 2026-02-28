@@ -31,7 +31,7 @@ class TeacherRequest extends FormRequest
             "nrc" => "string|required",
             "dob" => "date|required",
             "qualification" => "string|required",
-            "school-qualification" => "string|nullable",
+            "school_qualification" => "string|nullable",
             "other_skills" => "string|nullable",
             "phone" => "string|required",
             "address" => "string|required",

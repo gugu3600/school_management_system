@@ -1,7 +1,7 @@
 import { deleteUser, getAllUsers, userProfile } from "../api/userAPI";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient, useApp } from "../ThemeApp";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 
 export const useGetUsers = () => {
 

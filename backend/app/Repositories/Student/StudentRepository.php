@@ -6,6 +6,8 @@ use App\Models\Student;
 use App\Repositories\Enrollment\EnrollmentRepositoryInterface;
 use App\Repositories\Student\StudentRepositoryInterface;
 
+use function PHPUnit\Framework\isArray;
+
 class StudentRepository implements StudentRepositoryInterface 
 {
      protected $enrollmentRepo;
@@ -33,14 +35,25 @@ class StudentRepository implements StudentRepositoryInterface
             "mother_name" => $data["mother_name"],
             "address" => $data["address"],
             "phone" => $data["phone"],
-            "previous_school" => $data["previous_school"],
+            "father_occupation" => $data["father_occupation"],
+            "current_education" => $data["current_education"],
+            "other_qualification" => $data["other_qualification"],
+            "reason_of_join" => $data["reason_of_join"],
         ]);
 
         if($path){
           $user->photo()->create(["path" => $path]);      
           }
 
-          $this->enrollmentRepo->store($user->id,$data["classroom_id"]);
+          if(isset($data["classroom_ids"]) && isArray($data["classroom_ids"])){
+
+               foreach($data["classroom_ids"] as $classroom_id){
+                    $this->enrollmentRepo->store($user->id,$classroom_id);
+               }
+          }else{
+               $this->enrollmentRepo->store($user->id,$data["classroom_ids"]);
+          }
+
           $student->load(["user","photo"]);
                    // return Student::create($data);
           return $student;
