@@ -39,6 +39,7 @@ class StudentRegisterRequest extends FormRequest
             "current_education" => "required|string",
             "other_qualification" => "nullable|string",
             "reason_of_join" => "required|string", 
+            "classroom_id" => "required|integer",
         ];
     }
 }

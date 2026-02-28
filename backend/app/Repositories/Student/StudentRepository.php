@@ -3,10 +3,17 @@
 namespace App\Repositories\Student;
 
 use App\Models\Student;
+use App\Repositories\Enrollment\EnrollmentRepositoryInterface;
 use App\Repositories\Student\StudentRepositoryInterface;
 
 class StudentRepository implements StudentRepositoryInterface 
 {
+     protected $enrollmentRepo;
+
+     public function __construct(EnrollmentRepositoryInterface $enrollmentRepo)
+     {
+          $this->enrollmentRepo = $enrollmentRepo;
+     }
      public function index()
      {
           $students = Student::with("user")->get();
@@ -18,7 +25,7 @@ class StudentRepository implements StudentRepositoryInterface
 
           $user->assignRole("student");
           
-          $students = $user->student()->create([
+          $student = $user->student()->create([
             "student_id" => $data["student_id"],
             "dob" => $data["dob"],
             "gender" => $data["gender"],
@@ -32,10 +39,11 @@ class StudentRepository implements StudentRepositoryInterface
         if($path){
           $user->photo()->create(["path" => $path]);      
           }
-          
-          $students->load(["user","photo"]);
+
+          $this->enrollmentRepo->store($user->id,$data["classroom_id"]);
+          $student->load(["user","photo"]);
                    // return Student::create($data);
-          return $students;
+          return $student;
      }
 
 

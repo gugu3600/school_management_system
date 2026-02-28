@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\Academic_Year_Controller;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\ClassroomController;
 use App\Http\Controllers\API\StudentController;
 use App\Http\Controllers\API\TeacherController;
 use App\Http\Controllers\API\UserController;
@@ -18,6 +19,7 @@ Route::post('/auth/login', [AuthController::class, 'login'])->middleware('guest'
 Route::apiResource('/permissions', PermissionController::class);
 Route::post('/addPermission', [User::class, 'addPermission']);
 Route::get('/years/active', [Academic_Year_Controller::class, 'getCurrentYear']);
+Route::get("/classrooms",[ClassroomController::class,"index"]);
 
 // Route::apiResource("/permissions",PermissionController::class);
 // Route::get("/",[PermissionController::class,"index"]);

@@ -24,4 +24,28 @@ class Classroom extends Model
         
         return $this->hasMany(Enrollment::class);
     }
+
+    public function students()
+    {
+        return $this->hasManyThrough(
+            User::class,
+            Enrollment::class,
+            "classroom_id",
+            "id",
+            "id",
+            "student_id"
+        );
+    }
+
+    public function academic_years()
+    {
+        return $this->hasManyThrough(
+            Academic_Year::class,
+            Enrollment::class,
+            "classroom_id",
+            "id",
+            "id",
+            "academic_year_id"
+        );
+    }
 }

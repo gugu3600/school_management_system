@@ -46,7 +46,6 @@ class StudentController extends BaseController
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ];
-        $user = $this->userRepo->register($userData);
         try {
             $path = null;
 
@@ -66,6 +65,7 @@ class StudentController extends BaseController
 
                 $path = $upload['secure_url'];
             }
+        $user = $this->userRepo->register($userData);
         
         $student = $this->studentRepo->store($user, $data, $path);
 

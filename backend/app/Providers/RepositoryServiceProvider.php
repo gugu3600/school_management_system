@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use App\Repositories\Academic_Year\Academic_Year_Repository;
 use App\Repositories\Academic_Year\Academic_Year_RepositoryInterface;
+use App\Repositories\Classroom\ClassroomRepository;
+use App\Repositories\Classroom\ClassroomRepositoryInterface;
+use App\Repositories\Enrollment\EnrollmentRepository;
+use App\Repositories\Enrollment\EnrollmentRepositoryInterface;
 use App\Repositories\Photo\PhotoRepository;
 use App\Repositories\Photo\PhotoRepositoryInterface;
 use App\Repositories\Student\StudentRepository;
@@ -37,6 +41,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->singleton(Academic_Year_RepositoryInterface::class,Academic_Year_Repository::class);
 
         $this->app->singleton(PhotoRepositoryInterface::class,PhotoRepository::class);
+
+        $this->app->singleton(EnrollmentRepositoryInterface::class,EnrollmentRepository::class);
+
+        $this->app->singleton(ClassroomRepositoryInterface::class,ClassroomRepository::class);
     }
 
 
