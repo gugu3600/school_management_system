@@ -9,16 +9,16 @@ import { QueryClient } from "@tanstack/react-query";
 export const useLogin = () => {
 
      const navigate = useNavigate();
-     const {auth,setAuth,setGlobalMsg} = useApp();
+     const {auth,setAuth,setGlobalMsg,authLoading} = useApp();
      const [error,setError] = useState(null);
 
      const login = useMutation({
           mutationFn : loginUser,
           onSuccess : (res) => {
                setAuth(res.user);
-               console.log(res);
+               // console.log(res);
                setGlobalMsg("Login Successfully");
-               if (auth.roles.includes("admin")) {
+               if (auth.roles.includes("admin") & !authLoading) {
                     navigate("/admin/dashboard")
                }
 

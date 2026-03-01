@@ -75,7 +75,7 @@ export default function AddNewTeacher() {
           formData.append("nrc", nrcInput.current.value);
           formData.append("dob", dobInput.current.value);
           formData.append("qualification", qualificationInput.current.value);
-          formData.append("school-qualification", schoolQualiInput.current.value);
+          formData.append("school_qualification", schoolQualiInput.current.value);
           formData.append("other_skills", otherSkillsInput.current.value);
           formData.append("phone", phoneInput.current.value);
           formData.append("address", addressInput.current.value);
