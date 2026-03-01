@@ -18,7 +18,7 @@ export default function TeacherProfile({ user }) {
                <Container maxWidth="md">
                     <Paper elevation={0} sx={{ p: { xs: 3, md: 6 }, borderRadius: '30px', border: '1px solid', borderColor: 'divider' }}>
                          <Stack alignItems="center" spacing={2} sx={{ mb: 4 }}>
-                              <Avatar src={user?.photo?.path} sx={{ width: 140, height: 140, border: '5px solid #2e7d32' }} />
+                              <Avatar src={user?.photo} sx={{ width: 140, height: 140, border: '5px solid #2e7d32' }} />
                               <Box sx={{ textAlign: 'center' }}>
                                    <Typography variant="h4" sx={{ fontWeight: 900, color: '#2e7d32' }}>
                                         {user?.honor_title} {user?.name}
