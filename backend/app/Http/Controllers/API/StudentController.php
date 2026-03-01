@@ -105,7 +105,7 @@ class StudentController extends BaseController
     {
         $data = $request->validated();
 
-        $updateStudent = $this->studentRepo->update($data, $id);
+        $updateStudent = DB::transaction(fn() => $this->studentRepo->update($data,$id));
 
         return $this->success($updateStudent, 'Student Update Successfully', 200);
     }

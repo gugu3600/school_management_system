@@ -62,7 +62,7 @@ class StudentRepository implements StudentRepositoryInterface
 
      public function show($userId)
      {
-          $student = Student::with("users")->where("user_id",$userId)->firstOrFail();
+          $student = Student::with("user","photo","classrooms")->where("user_id",$userId)->firstOrFail();
 
           return $student;
      }
@@ -71,8 +71,11 @@ class StudentRepository implements StudentRepositoryInterface
      {
           $student = Student::where("user_id",$userId)->firstOrFail();
           
+          if(isset($data["classroom_ids"]) and is_array($data["classroom_ids"])){
+               $this->enrollmentRepo->update($userId,$data["classroom_ids"]);
+          }
            $student->update($data);
-
+           
            $student->load("user");
 
            return $student;

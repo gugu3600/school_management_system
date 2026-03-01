@@ -2,6 +2,7 @@
 
 namespace App\Repositories\User;
 
+use App\Models\Academic_Year;
 use App\Models\User;
 
 class UserRepository implements UserRepositoryInterface
@@ -45,4 +46,6 @@ class UserRepository implements UserRepositoryInterface
         
         return $user->delete();
     }
+
+    
 }

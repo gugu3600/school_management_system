@@ -39,4 +39,16 @@ class Student extends Model
             "id" // local key of User table
         );
     }
+
+    public function classrooms()
+{
+    return $this->hasManyThrough(
+        Classroom::class,    // Target model
+        Enrollment::class,   // Intermediate model (Pivot)
+        'student_id',        // Foreign key on Enrollment table (pointing to User ID)
+        'id',                // Foreign key on Classroom table
+        'user_id',           // Local key on Student table
+        'classroom_id'       // Local key on Enrollment table
+    );
+}
 }

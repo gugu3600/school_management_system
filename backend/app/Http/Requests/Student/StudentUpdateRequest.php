@@ -34,6 +34,8 @@ class StudentUpdateRequest extends FormRequest
             "current_education" => "required|string",
             "other_qualification" => "nullable|string",
             "reason_of_join" => "required|string",
+            "classroom_ids" => "required|array|min:1",
+            "classroom_ids.*" => "integer|exists:classrooms,id"
         ];
     }
 }

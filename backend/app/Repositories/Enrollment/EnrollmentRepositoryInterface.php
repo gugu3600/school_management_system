@@ -6,4 +6,5 @@ interface EnrollmentRepositoryInterface
 {
      public function index();
      public function store($userId,$classroomId);
+     public function update($userId,Array $classroomIds);
 }
