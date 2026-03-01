@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import {
      Table, TableBody, TableCell, TableContainer,
      TableHead, TableRow, Paper, Typography, Chip, Avatar, Box, Button, Stack, useTheme
@@ -14,12 +15,26 @@ import {
      Person as StudentIcon,
      AccountCircle
 } from '@mui/icons-material';
+import ConfirmDeleteModal from './ConfirmDeleteModal';
 
 const UsersTable = ({ users, deleteFun }) => {
      const navigate = useNavigate();
      const { auth } = useApp();
      const theme = useTheme();
      const isDark = theme.palette.mode === 'dark';
+
+     const [openModal,setOpenModal] = useState(false);
+     const [selectedUser,setSelectedUser] = useState(null);
+
+     const handleDeleteClick = (user) => {
+          setSelectedUser(user);
+          setOpenModal(true);
+     };
+
+     const handleConfirmDelete = () => {
+          deleteFun(selectedUser.id);
+          setOpenModal(false);
+     };
 
      // Role Config with Islamic Palette
      const getRoleConfig = (roleName) => {
@@ -174,7 +189,7 @@ const UsersTable = ({ users, deleteFun }) => {
                                                                       <EditIcon sx={{ fontSize: { xs: 18, md: 20 } }} />
                                                                  </Button>
                                                                  <Button
-                                                                      onClick={() => deleteFun(user.id)}
+                                                                      onClick={() => handleDeleteClick(user)}
                                                                       sx={{ minWidth: { xs: 30, md: 40 }, color: '#ef4444' }}
                                                                  >
                                                                       <DeleteIcon sx={{ fontSize: { xs: 18, md: 20 } }} />
@@ -195,6 +210,12 @@ const UsersTable = ({ users, deleteFun }) => {
                          </TableBody>
                     </Table>
                </TableContainer>
+               <ConfirmDeleteModal
+                    open={openModal}
+                    onClose={() => setOpenModal(false)}
+                    onConfirm={handleConfirmDelete}
+                    itemName={selectedUser?.name}
+               />
           </Box>
      );
 };
