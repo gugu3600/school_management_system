@@ -1,7 +1,7 @@
 import { useState, createContext, useContext, useMemo, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
-import {  grey, lightGreen } from "@mui/material/colors";
+import {   grey,blue  } from "@mui/material/colors";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Template from "./Template";
 import Login from "./pages/Login";
@@ -72,7 +72,9 @@ export default function ThemedApp() {
           return createTheme({
                palette: {
                     mode,
-                    primary: lightGreen,
+                    primary:{
+                         main: "#3c4776",
+                    },
                     banner: mode === "dark" ? grey[800] : grey[200],
                     text: {
                          fade: grey[500],

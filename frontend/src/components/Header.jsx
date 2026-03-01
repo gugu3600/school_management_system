@@ -53,7 +53,7 @@ export default function Header() {
                          color="inherit"
                          size="xl"
                          onClick={() => navigate("/")}>
-                         <SchoolIcon />
+                         <img src="/logo.png" alt="Logo" style={{ width: '130px', height: '130px' }} />
                     </IconButton>
 
                     {/* Role Header ကို Desktop မှာမှပြရန် Box sx ကို Append လုပ်ထားသည် */}

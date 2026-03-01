@@ -48,8 +48,8 @@ export default function Register() {
           <Container maxWidth="xs" sx={{ height: '100vh', display: 'flex', alignItems: 'center' }}>
                <Paper sx={{ p: 4, width: '100%', textAlign: 'center' }}>
                     <Box sx={{ mb: 3 }}>
-                         <Avatar sx={{ bgcolor: 'primary.main', width: 64, height: 64, mx: 'auto', mb: 2, boxShadow: 3 }}>
-                              <SchoolIcon sx={{ fontSize: 32 }} />
+                         <Avatar sx={{ bgcolor: 'primary.main', width: 120, height: 120, mx: 'auto', mb: 2, boxShadow: 3,padding : 2 }} src="/logo.png">
+  
                          </Avatar>
                          <Typography variant="h5" gutterBottom>Register</Typography>
                          <Typography variant="body2" color="text.secondary">Enter your credentials to continue</Typography>
