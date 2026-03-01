@@ -13,7 +13,7 @@ export default function AdminHeader() {
      const navigate = useNavigate();
      const items = [
           { text: "Dashboard", "path": "/admin/dashboard" },
-          { text: "Academic Years", "path": "/admin/years" },
+          { text: "Classrooms", "path": "/admin/classrooms" },
           { text: "User Management", "path": "/admin/users" },
           { text: "Register Student", path: "/admin/students/register" },
           { text: "Register Teacher", path: "/admin/teachers/register" },
