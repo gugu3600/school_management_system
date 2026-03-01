@@ -9,17 +9,18 @@ import { QueryClient } from "@tanstack/react-query";
 export const useLogin = () => {
 
      const navigate = useNavigate();
-     const {auth,setAuth,setGlobalMsg,authLoading} = useApp();
-     const [error,setError] = useState(null);
+     const { auth, setAuth, setGlobalMsg, authLoading } = useApp();
+     const [error, setError] = useState(null);
 
      const login = useMutation({
-          mutationFn : loginUser,
-          onSuccess : (res) => {
+          mutationFn: loginUser,
+          onSuccess: (res) => {
                setAuth(res.user);
                // console.log(res);
-               setGlobalMsg("Login Successfully");
                if (auth.roles.includes("admin") && !authLoading) {
-                    navigate("/admin/dashboard")
+                    navigate("/admin/dashboard");
+                    setGlobalMsg("Login Successfully");
+
                }
 
                if (auth.roles.includes("student")) {
@@ -34,25 +35,25 @@ export const useLogin = () => {
                }
           },
 
-          onError : err => {
+          onError: err => {
                setError(err.message) || "Login failed , please try again later";
           }
      });
 
-     const handleSubmit = (email,password) => {
+     const handleSubmit = (email, password) => {
           setError(null);
 
-          if(!email || !password){
+          if (!email || !password) {
                setError("Email and Password are required");
                return false;
           }
 
-          login.mutate({email,password});
+          login.mutate({ email, password });
      };
 
      return {
           handleSubmit,
           error,
-          isLoading : login.isPending,
+          isLoading: login.isPending,
      }
 }
