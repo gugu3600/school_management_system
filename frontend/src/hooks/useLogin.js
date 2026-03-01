@@ -18,7 +18,7 @@ export const useLogin = () => {
                setAuth(res.user);
                // console.log(res);
                setGlobalMsg("Login Successfully");
-               if (auth.roles.includes("admin") & !authLoading) {
+               if (auth.roles.includes("admin") && !authLoading) {
                     navigate("/admin/dashboard")
                }
 

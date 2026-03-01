@@ -12,14 +12,14 @@ import {
 import { useRef } from "react";
 import { useLogin } from "../hooks/useLogin";
 // import { useNavigate } from "react-router-dom";
-import { useApp } from "../ThemeApp";
+// import { useApp } from "../ThemeApp";
 
 export default function Login() {
 
      // const navigate = useNavigate();
      const emailInput = useRef();
      const passwordInput = useRef();
-     const {authLoading}  = useApp()
+     // const {authLoading}  = useApp()
      const { handleSubmit, error, isLoading } = useLogin();
      // const { auth } = useApp();
 
@@ -30,7 +30,7 @@ export default function Login() {
      }
 
      {
-          isLoading && (
+          isLoading &&  (
                <Typography textAlign={"center"}>Loading ...</Typography>
           )
      }
